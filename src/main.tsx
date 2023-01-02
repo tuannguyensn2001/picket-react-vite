@@ -9,6 +9,8 @@ import config from "~/config/config";
 import { QueryClientProvider } from "@tanstack/react-query";
 import queryClient from "~/config/query_client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -16,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <CssBaseline />
       <GoogleOAuthProvider clientId={config.oauth.client_id}>
         <QueryClientProvider client={queryClient}>
+          <ToastContainer theme={"dark"} />
           <ReactQueryDevtools />
           <App />
         </QueryClientProvider>
