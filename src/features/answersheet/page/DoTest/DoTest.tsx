@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TestContentType } from "~/enum";
 import { MultipleChoice } from "~/features/answersheet/components";
 import { useAnswerStore } from "~/features/answersheet/store";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ApiResponse, ApiResponseError } from "~/type";
 import API from "~/network";
@@ -14,6 +14,11 @@ import API from "~/network";
 function DoTest() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const refAnswer = useRef<{
+    testId: number;
+    questionId: number;
+    answer: string;
+  } | null>(null);
 
   const { isSuccess } = useCheckUserDoingTest({
     onSuccess(check: boolean) {
@@ -45,6 +50,11 @@ function DoTest() {
       });
       return response.data;
     },
+    onSuccess() {
+      if (!refAnswer?.current) return;
+      const { testId, questionId, answer } = refAnswer.current;
+      store.changeAnswer(testId, questionId, answer);
+    },
   });
 
   useEffect(() => {
@@ -57,6 +67,15 @@ function DoTest() {
   const changeAnswer = (questionId: number, answer: string) => {
     if (!content) return;
     // store.changeAnswer(Number(content?.test_id), questionId, answer);
+    if (!answer) {
+      store.changeAnswer(Number(content?.test_id), questionId, answer);
+      return;
+    }
+    refAnswer.current = {
+      testId: Number(content?.test_id),
+      questionId: questionId,
+      answer: answer,
+    };
     userAnswer.mutate({
       testId: content.test_id,
       questionId: questionId,
