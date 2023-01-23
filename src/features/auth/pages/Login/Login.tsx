@@ -27,6 +27,7 @@ function Login() {
       navigate(previousUrl);
       deleteKey("previous_url");
     }
+    navigate("/admin/dashboard");
   };
 
   const login = useMutation<

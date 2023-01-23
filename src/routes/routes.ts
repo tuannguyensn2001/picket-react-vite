@@ -3,6 +3,7 @@ import React, { lazy } from "react";
 import Login from "~/features/auth/pages";
 import { Start, DoTest } from "~/features/answersheet/page";
 import authLoader from "~/loader";
+import { Dashboard } from "~/features/dashboard/pages";
 
 const routes = createBrowserRouter([
   {
@@ -17,6 +18,11 @@ const routes = createBrowserRouter([
   {
     path: "/answersheet/do/test/:id",
     element: React.createElement(DoTest),
+    loader: authLoader,
+  },
+  {
+    path: "/admin/dashboard",
+    element: React.createElement(Dashboard),
     loader: authLoader,
   },
 ]);

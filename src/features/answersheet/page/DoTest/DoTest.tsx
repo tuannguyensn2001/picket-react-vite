@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TestContentType } from "~/enum";
 import { MultipleChoice } from "~/features/answersheet/components";
 import { useAnswerStore } from "~/features/answersheet/store";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ApiResponse, ApiResponseError } from "~/type";
 import API from "~/network";
