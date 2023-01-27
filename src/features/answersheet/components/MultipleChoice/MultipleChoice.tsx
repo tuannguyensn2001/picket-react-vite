@@ -19,12 +19,13 @@ export function MultipleChoice({ answers, changeAnswer, getAnswer }: Prop) {
     //   changeAnswer(activeAnswer, event.target.value);
     // }, 0);
     return () => {
-      changeAnswer(activeAnswer, answer);
+      const questionId = answers[activeAnswer].id;
+      changeAnswer(questionId, answer);
     };
   };
 
   const answer = useMemo<string | undefined>(() => {
-    const result = getAnswer(activeAnswer);
+    const result = getAnswer(answers[activeAnswer].id);
     console.log(result);
     return result;
   }, [activeAnswer, getAnswer]);

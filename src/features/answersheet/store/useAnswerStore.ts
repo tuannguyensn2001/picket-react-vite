@@ -3,6 +3,9 @@ import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware";
 import { enableMapSet } from "immer";
 import Query_client from "~/config/query_client";
+import API from "~/network";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "~/type";
 
 enableMapSet();
 
@@ -32,11 +35,28 @@ const useAnswerStore = create<AnswerStore>()(
           `${testId.toString()}-${questionId.toString()}`
         ];
       },
-      init: (list) => {
+      init: async (list) => {
+        if (list.length == 0) return;
+        const testId = list[0][0];
+        const response = await API.get<
+          ApiResponse<
+            {
+              question_id: number;
+              answer: string;
+            }[]
+          >
+        >(`/v1/answersheets/test/${testId}/assignment`);
+
+        const mapAnswer = response.data.data.reduce((total, item) => {
+          total.set(Number(item.question_id), item.answer);
+          return total;
+        }, new Map<number, string>());
+
         set((state) => {
           list.forEach((item) => {
             const [testId, questionId] = item;
-            state.answers[`${testId.toString()}-${questionId.toString()}`] = "";
+            state.answers[`${testId.toString()}-${questionId.toString()}`] =
+              mapAnswer.get(Number(questionId)) || "";
           });
         });
       },
